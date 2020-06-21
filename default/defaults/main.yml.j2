@@ -1,0 +1,15 @@
+---
+# defaults file for {{ role_name }} 
+
+{{ role_name }}_package_name: {{ role_name }}
+{{ role_name }}_package_state: present
+
+# Service options.
+(( role_name }}_service_state: started
+(( role_name }}_service_enabled: true
+(( role_name }}_restart_handler_state: restarted
+
+# Service users
+{{ role_name }}_users: []
+
+

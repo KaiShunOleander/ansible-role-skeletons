@@ -1,0 +1,26 @@
+---
+# tasks file for {{ role_name }}
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
+
+- name: Install {{ role_name }}.
+  package:
+    name: {% raw %}"{{{% endraw %} {{ role_name  }}_package {% raw %}}}"{% endraw %}
+    state: {% raw %}"{{{% endraw %} {{ role_name }}_package_state {% raw %}}}"{% endraw %}
+  notify: restart {{ role_name }}
+
+- name: Ensure {{ role_name }} is started and enabled at boot.
+  service:
+    name: {{ role_name }}
+    state: {% raw %}"{{{% endraw %} {{ role_name }}_service_state {% raw %}}}"{% endraw %}
+    enabled: {% raw %}"{{{% endraw %} {{ role_name }}_service_enabled {% raw %}}}"{% endraw %}
+
+- name: Ensure handlers are notified now to avoid firewall conflicts.
+  meta: flush_handlers
+
+- include_tasks: {{ role_name }}-users.yml
+  when: {{ role_name }}_users | length > 0
+
